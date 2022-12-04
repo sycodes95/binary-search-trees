@@ -15,19 +15,21 @@ class Tree{
 }
 
 
-let arr = [1,2,3,4,5,6,7];
+let arr = [1,2,3,4,5,7,8,9,10,11,12];
 let start = 0;
-let end = 6;
+let end = arr.length - 1;
 
 
 
+let myTree = new Tree(arr, start, end)
 
+let root = myTree.root;
 
 
 function buildTree(arr, start, end){
     if(start > end) return null;
     
-    let mid = (start + end) / 2;
+    let mid = Math.floor((start + end) / 2);
     
     let root = new Node(arr[mid]);
     root.leftNode = buildTree(arr, start, mid - 1);
@@ -35,14 +37,72 @@ function buildTree(arr, start, end){
     
     return root;
 }
+
+function insertNode(data, root){
+    console.log(root)
+    if(root == null){
+        root = new Node(data)
+        root.leftNode = null;
+        root.rightNode = null;
+        return root;
+    }
     
+    if(data < root.data){
+        root.leftNode = insertNode(data, root.leftNode)
+    } else if (data > root.data){
+        root.rightNode = insertNode(data, root.rightNode)
+    }
+    return root;
+        
+}
+
+function deleteNode(data, root){
+    if(root == null) return root;
+    if(data < root.data) {
+        deleteNode(data, root.leftNode)
+    } else if (data > root.data){
+        deleteNode(data, root.rightNode);
+    } else {
+        if(root.leftNode == null){
+            return root.rightNode;
+        } else if(root.rightNode == null){
+            return root.leftNode;
+        }
+        root.data = minValue(root.rightNode);
+        root.rightNode = deleteNode(root.data, root.rightNode)
+    }
+    
+}
+
+function minValue(root){
+    let minv = root.data;
+    while(root.leftNode !== null){
+        minv = root.leftNode.data;
+        root = root.leftNode
+    }
+    return minv;
+}
 
 
 
-let kevin = new Tree(mergeSort(arr), start, end)
+insertNode(20, root)
+console.log(deleteNode(10, root))
+
+console.log(root)
 
 
-console.log(kevin.root.leftNode)
+const prettyPrint = (root, prefix = '', isLeft = true) => {
+    if (root.rightNode !== null) {
+        prettyPrint(root.rightNode, `${prefix}${isLeft ? '│   ' : '    '}`, false);
+    }
+    console.log(`${prefix}${isLeft ? '└── ' : '┌── '}${root.data}`);
+    if (root.leftNode !== null) {
+        prettyPrint(root.leftNode, `${prefix}${isLeft ? '    ' : '│   '}`, true);
+    }
+}
+
+console.log(prettyPrint(root))
+
 
 
 
