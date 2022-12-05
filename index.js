@@ -11,7 +11,9 @@ class Tree{
         
         this.root = buildTree(arr, start, end);
 
-    }      
+    }
+    
+    
 }
 
 
@@ -54,14 +56,22 @@ function insertNode(data, root){
     }
     return root;
         
-}
+}      
+
+
 
 function deleteNode(data, root){
+    
     if(root == null) return root;
+    //If tree is empty, just return it
     if(data < root.data) {
         deleteNode(data, root.leftNode)
+        /*if data to delete is less than this call root's data, recursively call this function again
+        on this root's LEFT node*/
     } else if (data > root.data){
         deleteNode(data, root.rightNode);
+        /*Else if data to delete is less than this call root's data, recursively call this function again
+        on this root's RIGHT node*/
     } else {
         if(root.leftNode == null){
             return root.rightNode;
@@ -71,25 +81,57 @@ function deleteNode(data, root){
         root.data = minValue(root.rightNode);
         root.rightNode = deleteNode(root.data, root.rightNode)
     }
+    return root;
     
 }
 
 function minValue(root){
     let minv = root.data;
     while(root.leftNode !== null){
+        //while root left exists
         minv = root.leftNode.data;
+        //root.data = root left data
         root = root.leftNode
     }
     return minv;
 }
 
+function find(data, root){
+    if(root == null) return root;
+    
+    if(data < root.data){
+        
+        find(data, root.leftNode)
+    } else if (data > root.data){
+        
+        find(data, root.rightNode)
+    } else if (data == root.data){
+        
+        return root.data;
+    }
+    
+    
+    
+}
+
+function levelOrder(){
+    const queue = [];
+    queue.push(this.root);
+    while(queue.length){
+        let current = queue.shift()
+        console.log(current.value)
+        if(current.leftNode){
+            queue.push(current.leftNode)
+        }
+        if(current.rightNode){
+            queue.push(current.rightNode)
+        }
+    }
+    
+}
 
 
-insertNode(20, root)
-console.log(deleteNode(10, root))
-
-console.log(root)
-
+console.log(myTree.levelOrder())
 
 const prettyPrint = (root, prefix = '', isLeft = true) => {
     if (root.rightNode !== null) {
